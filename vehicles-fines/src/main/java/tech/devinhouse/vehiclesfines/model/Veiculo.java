@@ -2,11 +2,13 @@ package tech.devinhouse.vehiclesfines.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.devinhouse.vehiclesfines.enums.TipoVeiculo;
 
 import java.util.List;
 
+@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
