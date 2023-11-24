@@ -2,6 +2,7 @@ package tech.devinhouse.vehiclesfines.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.devinhouse.vehiclesfines.enums.Role;
 
@@ -9,6 +10,7 @@ import tech.devinhouse.vehiclesfines.enums.Role;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "USUARIOS")
+@Data
 public class Usuario {
 
     @Id
