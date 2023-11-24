@@ -9,8 +9,12 @@ import tech.devinhouse.vehiclesfines.dto.MultaRequest;
 import tech.devinhouse.vehiclesfines.dto.MultaResponse;
 import tech.devinhouse.vehiclesfines.dto.VeiculoRequest;
 import tech.devinhouse.vehiclesfines.dto.VeiculoResponse;
+import tech.devinhouse.vehiclesfines.enums.Role;
+import tech.devinhouse.vehiclesfines.enums.TipoVeiculo;
 import tech.devinhouse.vehiclesfines.model.Multa;
+import tech.devinhouse.vehiclesfines.model.Usuario;
 import tech.devinhouse.vehiclesfines.model.Veiculo;
+import tech.devinhouse.vehiclesfines.service.UsuarioService;
 import tech.devinhouse.vehiclesfines.service.VeiculoService;
 
 import java.net.URI;
@@ -23,6 +27,10 @@ public class VeiculosController {
 
     @Autowired
     private VeiculoService veiculoService;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
 
     @Autowired
     private ModelMapper mapper;
@@ -69,5 +77,28 @@ public class VeiculosController {
         multa = veiculoService.cadastrarMulta(placa, multa);
         var resp = mapper.map(multa, MultaResponse.class);
         return ResponseEntity.ok(resp);
+    }
+    @PostMapping("/dados")
+    public ResponseEntity<?> carregarDados() {
+        var veiculos = veiculoService.consultar();
+        if (veiculos.isEmpty()) {
+            Veiculo veiculo1 = new Veiculo("ABC-1234", TipoVeiculo.AUTOMOVEL, "Company1", 2012, "preto");
+            Veiculo veiculo2 = new Veiculo("BCA-4321", TipoVeiculo.ONIBUS, "Company2", 1950, "prata");
+            veiculoService.salvar(veiculo1);
+            veiculoService.salvar(veiculo2);
+            Multa multa1Veic1 = new Multa("Florianopolis", "Excesso de velocidade", 200F, veiculo1);
+            Multa multa2Veic1 = new Multa("Sao Paulo", "Dirigir sem CNH", 200F, veiculo1);
+            Multa multa1Veic2 = new Multa("Rio", "Farol apagado", 200F, veiculo2);
+            veiculoService.cadastrarMulta(veiculo1.getPlaca(), multa1Veic1);
+            veiculoService.cadastrarMulta(veiculo1.getPlaca(), multa2Veic1);
+            veiculoService.cadastrarMulta(veiculo2.getPlaca(), multa1Veic2);
+        }
+        var usuarios = usuarioService.consultar();
+        if (usuarios.isEmpty()) {
+            usuarioService.inserir(new Usuario("Gustavo Almeida", "gustavo@almeida.com", "123456", Role.ADMIN));
+            usuarioService.inserir(new Usuario("Fulano de Beltrano", "fulano@almeida.com", "654321", Role.USUARIO));
+        }
+        return ResponseEntity.ok().build();
+
     }
 }
