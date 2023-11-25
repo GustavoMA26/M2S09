@@ -6,9 +6,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.devinhouse.vehiclesfines.dto.AutenticacaoRequest;
+import tech.devinhouse.vehiclesfines.dto.AutenticacaoResponse;
 import tech.devinhouse.vehiclesfines.dto.UsuarioResponse;
 import tech.devinhouse.vehiclesfines.dto.UsuarioRequest;
 import tech.devinhouse.vehiclesfines.model.Usuario;
+import tech.devinhouse.vehiclesfines.service.AutenticacaoService;
 import tech.devinhouse.vehiclesfines.service.UsuarioService;
 
 import java.net.URI;
@@ -22,6 +25,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private AutenticacaoService autenticacaoService;
 
     @Autowired
     private ModelMapper mapper;
@@ -39,5 +45,11 @@ public class UsuarioController {
         usuario = usuarioService.inserir(usuario);
         var resp = mapper.map(usuario, UsuarioResponse.class);
         return ResponseEntity.created(URI.create(usuario.getId().toString())).body(resp);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AutenticacaoResponse> login(@RequestBody @Valid AutenticacaoRequest request) {
+        var token = autenticacaoService.autenticar(request.getEmail(), request.getSenha());
+        return ResponseEntity.ok(new AutenticacaoResponse(token));
     }
 }
