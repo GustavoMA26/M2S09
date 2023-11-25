@@ -1,5 +1,6 @@
 package tech.devinhouse.vehiclesfines.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class VeiculosController {
     private ModelMapper mapper;
 
     @GetMapping
+    @RolesAllowed( {"ADMIN","USUARIO"} )
     public ResponseEntity<List<VeiculoResponse>> consultar() {
         var veiculos = veiculoService.consultar();
         var resp = new ArrayList<VeiculoResponse>();
@@ -52,6 +54,7 @@ public class VeiculosController {
     }
 
     @GetMapping("/{placa}")
+    @RolesAllowed( {"ADMIN","USUARIO"} )
     public ResponseEntity<VeiculoResponse> consultar(@PathVariable("placa") String placa) {
         var veiculo = veiculoService.consultar(placa);
         var resp = mapper.map(veiculo, VeiculoResponse.class);
@@ -64,6 +67,7 @@ public class VeiculosController {
     }
 
     @PostMapping
+    @RolesAllowed( {"ADMIN"} )
     public ResponseEntity<VeiculoResponse> cadastrarVeiculo(@RequestBody @Valid VeiculoRequest request) {
         var veiculo = mapper.map(request, Veiculo.class);
         veiculo = veiculoService.salvar(veiculo);
@@ -72,6 +76,7 @@ public class VeiculosController {
     }
 
     @PostMapping("/{placa}/multas")
+    @RolesAllowed( {"ADMIN"} )
     public ResponseEntity<MultaResponse> cadastrarMulta(@PathVariable("placa") String placa, @RequestBody @Valid MultaRequest request) {
         var multa = mapper.map(request, Multa.class);
         multa = veiculoService.cadastrarMulta(placa, multa);

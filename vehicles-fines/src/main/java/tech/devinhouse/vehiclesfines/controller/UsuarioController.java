@@ -1,5 +1,6 @@
 package tech.devinhouse.vehiclesfines.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
